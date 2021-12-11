@@ -1,0 +1,119 @@
+{
+  "name": "open-node-testnet",
+  "type": "remote",
+  "keep": true,
+  "nodes": {
+    "full": {
+      "image": "phalanetwork/khala-dev-node",
+      "args": {
+        "para": [
+          "todo"
+        ],
+        "relay": [
+          "todo"
+        ]
+      },
+      "resources": {
+        "request": {
+          "cpu": "2",
+          "memory": "2Gi"
+        }
+      }
+    },
+    "rpc": {
+      "image": "phalanetwork/khala-dev-node",
+      "args": {
+        "para": [
+          "todo"
+        ],
+        "relay": [
+          "todo"
+        ]
+      },
+      "resources": {
+        "request": {
+          "cpu": "2",
+          "memory": "4Gi"
+        },
+        "limit": {
+          "cpu": "4",
+          "memory": "4Gi"
+        }
+      }
+    },
+    "bootstrap": {
+      "image": "phalanetwork/khala-dev-node",
+      "args": {
+        "para": [
+          "todo"
+        ],
+        "relay": [
+          "todo"
+        ]
+      },
+      "resources": {
+        "request": {
+          "cpu": "2",
+          "memory": "2Gi"
+        }
+      }
+    },
+    "collator": {
+      "image": "phalanetwork/khala-dev-node",
+      "args": {
+        "para": [
+          "todo"
+        ],
+        "relay": [
+          "todo"
+        ]
+      },
+      "resources": {
+        "request": {
+          "cpu": "2",
+          "memory": "2Gi"
+        },
+        "limit": {
+          "cpu": "3",
+          "memory": "2Gi"
+        }
+      }
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "opsgenie": {
+      "enabled": false
+     }
+  },
+  "remote": {
+    "projectID": "open-node-dev",
+    "domain": "phala.works",
+    "clusters": [
+      {
+        "provider": "gcp",
+        "location": "asia-east1",
+        "machineType": "e2-standard-8",
+        "workers": 2,
+        "nodes": {
+          "full": {
+            "enabled": true,
+            "replica": 1
+          },
+          "rpc": {
+            "enabled": true,
+            "replica": 1
+          },
+          "bootstrap": {
+            "enabled": true,
+            "replica": 1
+          },
+          "collator": {
+            "enabled": false,
+            "replica": 1
+          }
+        }
+      }
+    ]
+  }
+}
