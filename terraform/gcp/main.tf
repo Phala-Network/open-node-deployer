@@ -2,7 +2,8 @@ resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.location
 
-  initial_node_count = var.node_count
+  remove_default_node_pool = true
+  initial_node_count = 1
 
   master_auth {
     client_certificate_config {
@@ -11,8 +12,25 @@ resource "google_container_cluster" "primary" {
   }
 
   lifecycle {
-    ignore_changes = ["master_auth"]
+    ignore_changes = [master_auth]
   }
+
+  min_master_version = var.k8s_version
+
+  network = google_compute_network.network.self_link
+  subnetwork = google_compute_subnetwork.subnetwork.self_link
+
+  network_policy {
+    enabled = true
+    provider = "CALICO"
+  }
+}
+
+resource "google_container_node_pool" "primary_nodes" {
+  name       = "ond-node-pool"
+  location   = var.location
+  cluster    = google_container_cluster.primary.name
+  node_count = var.node_count
 
   node_config {
     preemptible  = false
@@ -24,24 +42,11 @@ resource "google_container_cluster" "primary" {
       "https://www.googleapis.com/auth/monitoring",
     ]
   }
-
-  min_master_version = var.k8s_version
-  node_version = var.k8s_version
-
-  network = google_compute_network.network.self_link
-  subnetwork = google_compute_subnetwork.subnetwork.self_link
-
-  network_policy {
-    enabled = true
-
-    provider = "CALICO"
-  }
 }
 
 resource "google_compute_network" "network" {
   name                    = var.cluster_name
   auto_create_subnetworks = false
-
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
@@ -52,13 +57,13 @@ resource "google_compute_subnetwork" "subnetwork" {
   region        = join("-", slice(split("-", var.location), 0, 2))
 }
 
-resource "google_compute_firewall" "polkadot" {
+resource "google_compute_firewall" "open_node" {
   name    = var.cluster_name
   network = google_compute_network.network.self_link
 
   allow {
     protocol = "tcp"
-    ports    = ["30100-30101"]
+    ports    = ["30000-32767"]
   }
 
   source_ranges = ["0.0.0.0/0"]

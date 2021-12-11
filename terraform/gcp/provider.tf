@@ -1,13 +1,12 @@
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.3"
+    }
+  }
+}
+
 provider "google" {
-  project     = "{{ projectID }}"
-  version     = "~>2.16"
-}
-
-provider "google-beta" {
-  project     = "{{ projectID }}"
-  version     = "~>2.16"
-}
-
-provider "template" {
-  version     = "~>2.1"
+  project = "{{ projectID }}"
 }

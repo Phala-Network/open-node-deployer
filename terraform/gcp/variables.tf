@@ -1,5 +1,5 @@
 variable "cluster_name" {
-  default = "polkadot-deployer"
+  default = "open-node-deployer"
 }
 
 variable "location" {
@@ -11,15 +11,15 @@ variable "node_count" {
 }
 
 variable "machine_type" {
-  default = "{{#if machineType }}{{ machineType}}{{ else }}n1-standard-2{{/if}}"
+  default = "{{#if machineType }}{{ machineType}}{{ else }}n2-standard-4{{/if}}"
 }
 
 variable "k8s_version" {
-  default = "1.20.10-gke.301"
+  default = "1.21.5-gke.1302"
 }
 
 variable "image_type" {
-  default = "UBUNTU"
+  default = "ubuntu"
 }
 
 variable "gcloud_path" {

@@ -2,13 +2,13 @@ apiVersion: v1
 kind: Config
 preferences:
   colors: true
-current-context: polkadot-deployer
+current-context: open-node-deployer
 contexts:
 - context:
     cluster: ${cluster_name}
     namespace: default
     user: ${cluster_name}
-  name: polkadot-deployer
+  name: open-node-deployer
 clusters:
 - cluster:
     server: https://${endpoint}
