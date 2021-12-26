@@ -3,31 +3,82 @@
   "type": "remote",
   "keep": true,
   "nodes": {
+    "common": {
+      "image": "phalanetwork/khala-dev-node:latest-healthcheck",
+      "command": ["/root/khala-node"],
+      "dataPath": "/data",
+      "dataVolume": {
+        "storageClassName": "",
+        "initialSize": "20Gi"
+      },
+      "port": {
+        "p2p": {
+          "para": 30333,
+          "relay": 30334
+        },
+        "rpc": {
+          "para": 9933,
+          "relay": 9944
+        }
+      },
+      "livenessProbe": {
+        "exec": {
+          "command": ["curl", "-f", "-H", "Content-Type: application/json", "-d", "{\"id\":1, \"jsonrpc\":\"2.0\", \"method\": \"system_health\"}", "http://localhost:9933/"]
+        },
+        "failureThreshold": 3,
+        "initialDelaySeconds": 10,
+        "periodSeconds": 10
+      }
+    },
     "full": {
-      "image": "phalanetwork/khala-dev-node",
       "args": {
         "para": [
-          "todo"
+          "--chain=/root/thala-local-2004-raw.chain_spec.json",
+          "--pruning=archive",
+          "--state-cache-size=671088640",
+          "--db-cache=2048",
+          "--max-runtime-instances=16"
         ],
         "relay": [
-          "todo"
+          "--chain=/root/rococo-local-raw.chain_spec.json",
+          "--pruning=256",
+          "--state-cache-size=671088640",
+          "--db-cache=2048",
+          "--max-runtime-instances=16"
         ]
       },
       "resources": {
         "request": {
           "cpu": "2",
           "memory": "2Gi"
+        },
+        "limit": {
+          "cpu": "2",
+          "memory": "2Gi"
         }
       }
     },
     "rpc": {
-      "image": "phalanetwork/khala-dev-node",
       "args": {
         "para": [
-          "todo"
+          "--chain=/root/thala-local-2004-raw.chain_spec.json",
+          "--pruning=archive",
+          "--state-cache-size=671088640",
+          "--db-cache=2048",
+          "--max-runtime-instances=16",
+          "--rpc-methods=Unsafe",
+          "--rpc-cors=all",
+          "--unsafe-ws-external",
+          "--ws-port 9944",
+          "--unsafe-rpc-external",
+          "--rpc-port 9933"
         ],
         "relay": [
-          "todo"
+          "--chain=/root/rococo-local-raw.chain_spec.json",
+          "--pruning=256",
+          "--state-cache-size=671088640",
+          "--db-cache=2048",
+          "--max-runtime-instances=16"
         ]
       },
       "resources": {
@@ -39,10 +90,17 @@
           "cpu": "4",
           "memory": "4Gi"
         }
+      },
+      "readinessProbe": {
+        "exec": {
+          "command": ["sh", "/root/health.sh"]
+        },
+        "failureThreshold": 3,
+        "initialDelaySeconds": 10,
+        "periodSeconds": 10
       }
     },
     "bootstrap": {
-      "image": "phalanetwork/khala-dev-node",
       "args": {
         "para": [
           "todo"
@@ -55,11 +113,14 @@
         "request": {
           "cpu": "2",
           "memory": "2Gi"
+        },
+        "limit": {
+          "cpu": "2",
+          "memory": "2Gi"
         }
       }
     },
     "collator": {
-      "image": "phalanetwork/khala-dev-node",
       "args": {
         "para": [
           "todo"
@@ -94,7 +155,7 @@
         "provider": "gcp",
         "location": "asia-east1",
         "machineType": "e2-standard-8",
-        "workers": 2,
+        "workers": 1,
         "nodes": {
           "full": {
             "enabled": true,
@@ -105,7 +166,7 @@
             "replica": 1
           },
           "bootstrap": {
-            "enabled": true,
+            "enabled": false,
             "replica": 1
           },
           "collator": {
