@@ -28,7 +28,8 @@
         "failureThreshold": 3,
         "initialDelaySeconds": 10,
         "periodSeconds": 10
-      }
+      },
+      "readinessProbe": {}
     },
     "full": {
       "args": {
@@ -48,11 +49,11 @@
         ]
       },
       "resources": {
-        "request": {
+        "requests": {
           "cpu": "2",
           "memory": "2Gi"
         },
-        "limit": {
+        "limits": {
           "cpu": "2",
           "memory": "2Gi"
         }
@@ -69,9 +70,9 @@
           "--rpc-methods=Unsafe",
           "--rpc-cors=all",
           "--unsafe-ws-external",
-          "--ws-port 9944",
+          "--ws-port=9944",
           "--unsafe-rpc-external",
-          "--rpc-port 9933"
+          "--rpc-port=9933"
         ],
         "relay": [
           "--chain=/root/rococo-local-raw.chain_spec.json",
@@ -82,11 +83,11 @@
         ]
       },
       "resources": {
-        "request": {
+        "requests": {
           "cpu": "2",
           "memory": "4Gi"
         },
-        "limit": {
+        "limits": {
           "cpu": "4",
           "memory": "4Gi"
         }
@@ -110,11 +111,11 @@
         ]
       },
       "resources": {
-        "request": {
+        "requests": {
           "cpu": "2",
           "memory": "2Gi"
         },
-        "limit": {
+        "limits": {
           "cpu": "2",
           "memory": "2Gi"
         }
@@ -130,11 +131,11 @@
         ]
       },
       "resources": {
-        "request": {
+        "requests": {
           "cpu": "2",
           "memory": "2Gi"
         },
-        "limit": {
+        "limits": {
           "cpu": "3",
           "memory": "2Gi"
         }
@@ -156,6 +157,7 @@
         "location": "asia-east1",
         "machineType": "e2-standard-8",
         "workers": 1,
+        "subdomain": "",
         "nodes": {
           "full": {
             "enabled": true,
