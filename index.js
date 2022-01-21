@@ -28,6 +28,8 @@ program
   .option('-d, --data [path]', 'Path to data directory.')
   .option('--verbose', 'Output extra info.')
   .option('--update', 'Rerun deployment actions if the cluster already exists.')
+  .option('--skip-infra', 'Skip creating infra.')
+  .option('--skip-deps', 'Skip installing dependencies.')
   .action(create.do);
 
 program
