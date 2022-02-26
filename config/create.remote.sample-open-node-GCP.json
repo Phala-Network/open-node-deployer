@@ -4,12 +4,12 @@
   "keep": true,
   "nodes": {
     "common": {
-      "image": "phalanetwork/khala-dev-node:latest-healthcheck",
-      "command": ["/root/khala-node"],
+      "image": "phalanetwork/khala-node:v1119-healthcheck",
+      "command": [],
       "dataPath": "/data",
       "dataVolume": {
         "storageClassName": "",
-        "initialSize": "20Gi"
+        "initialSize": "200Gi"
       },
       "port": {
         "p2p": {
@@ -25,23 +25,24 @@
         "exec": {
           "command": ["curl", "-f", "-H", "Content-Type: application/json", "-d", "{\"id\":1, \"jsonrpc\":\"2.0\", \"method\": \"system_health\"}", "http://localhost:9933/"]
         },
+        "timeoutSeconds": 5,
         "failureThreshold": 3,
-        "initialDelaySeconds": 10,
+        "initialDelaySeconds": 180,
         "periodSeconds": 10
       },
-      "readinessProbe": {}
+      "readinessProbe": {},
+      "terminationGracePeriodSeconds": 120
     },
     "full": {
       "args": {
         "para": [
-          "--chain=/root/thala-local-2004-raw.chain_spec.json",
+          "--chain=khala",
           "--pruning=archive",
           "--state-cache-size=671088640",
           "--db-cache=2048",
           "--max-runtime-instances=16"
         ],
         "relay": [
-          "--chain=/root/rococo-local-raw.chain_spec.json",
           "--pruning=256",
           "--state-cache-size=671088640",
           "--db-cache=2048",
@@ -51,18 +52,18 @@
       "resources": {
         "requests": {
           "cpu": "2",
-          "memory": "2Gi"
+          "memory": "12Gi"
         },
         "limits": {
           "cpu": "2",
-          "memory": "2Gi"
+          "memory": "12Gi"
         }
       }
     },
     "rpc": {
       "args": {
         "para": [
-          "--chain=/root/thala-local-2004-raw.chain_spec.json",
+          "--chain=khala",
           "--pruning=archive",
           "--state-cache-size=671088640",
           "--db-cache=2048",
@@ -75,7 +76,6 @@
           "--rpc-port=9933"
         ],
         "relay": [
-          "--chain=/root/rococo-local-raw.chain_spec.json",
           "--pruning=256",
           "--state-cache-size=671088640",
           "--db-cache=2048",
@@ -84,20 +84,21 @@
       },
       "resources": {
         "requests": {
-          "cpu": "2",
-          "memory": "4Gi"
+          "cpu": "4",
+          "memory": "12Gi"
         },
         "limits": {
           "cpu": "4",
-          "memory": "4Gi"
+          "memory": "12Gi"
         }
       },
       "readinessProbe": {
         "exec": {
           "command": ["sh", "/root/health.sh"]
         },
+        "timeoutSeconds": 5,
         "failureThreshold": 3,
-        "initialDelaySeconds": 10,
+        "initialDelaySeconds": 180,
         "periodSeconds": 10
       }
     },
