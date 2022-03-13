@@ -139,7 +139,7 @@ Here's an example of a complete config file:
   "keep": true,
   "nodes": {
     "common": {
-      "image": "phalanetwork/khala-node:v1119-healthcheck",
+      "image": "phalanetwork/khala-node:v1110-healthcheck",
       "command": [],
       "dataPath": "/data",
       "dataVolume": {
@@ -175,13 +175,15 @@ Here's an example of a complete config file:
           "--pruning=archive",
           "--state-cache-size=671088640",
           "--db-cache=2048",
-          "--max-runtime-instances=16"
+          "--max-runtime-instances=16",
+          "--prometheus-external"
         ],
         "relay": [
           "--pruning=256",
           "--state-cache-size=671088640",
           "--db-cache=2048",
-          "--max-runtime-instances=16"
+          "--max-runtime-instances=16",
+          "--prometheus-external"
         ]
       },
       "resources": {
@@ -208,13 +210,15 @@ Here's an example of a complete config file:
           "--unsafe-ws-external",
           "--ws-port=9944",
           "--unsafe-rpc-external",
-          "--rpc-port=9933"
+          "--rpc-port=9933",
+          "--prometheus-external"
         ],
         "relay": [
           "--pruning=256",
           "--state-cache-size=671088640",
           "--db-cache=2048",
-          "--max-runtime-instances=16"
+          "--max-runtime-instances=16",
+          "--prometheus-external"
         ]
       },
       "resources": {
@@ -279,10 +283,7 @@ Here's an example of a complete config file:
     }
   },
   "monitoring": {
-    "enabled": true,
-    "opsgenie": {
-      "enabled": false
-     }
+    "enabled": true
   },
   "remote": {
     "projectID": "open-node-dev",
@@ -297,19 +298,23 @@ Here's an example of a complete config file:
         "nodes": {
           "full": {
             "enabled": true,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           },
           "rpc": {
             "enabled": true,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           },
           "bootstrap": {
             "enabled": false,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           },
           "collator": {
             "enabled": false,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           }
         }
       }
@@ -349,29 +354,15 @@ As mentioned above, workload params can be configured in multi places. Every par
 * `dataVolume`: the tool uses PVC template of StatefulSet to dynamically create data disks for each of your nodes. You can configure the storage class and initial size of the PV here. If you're not familiar with Kubernetes storage, read this [doc](https://kubernetes.io/docs/concepts/storage/). Note that the initial size cannot be changed after successful creation. You may manually edit the PVC of the node if you want to expand data disk for a specific node.
 * `livenessProbe` and `readinessProbe`: raw configs of [Kubernetes liveness probe and readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) for your workload pods.
 * `resources`: raw configs for [Kubernetes resource management](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) of your workload pods.
+* `partition`: represents the `partition` of the StatefulSet of the corresponding type of node, can be used for staging or rolling out a canary. Check [StatefulSet rolling update doc](https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#rolling-update) for details.
 
 Unless otherwise stated, every param can be changed on the fly, so you won't need any imperative command such as scale up and down. Just edit the config file and run `create --update`, the tool will make sure your deployment is as expected regardless of its previous state.
 
-## \[WIP\] Monitoring
+## Monitoring
 
-<!-- You can enable monitoring for remote deployments, by setting `remote.monitoring`
-to true in the configuration. When enabled, polkadot-deployer will install
-a generic monitoring stack composed of prometheus, alertmanager, grafana and loki,
-and a more polkadot-specific set of tools around [substrate-telemetry](https://github.com/paritytech/substrate-telemetry).
+You can enable monitoring for remote deployments, by setting `monitoring.enabled` to true in the configuration. When enabled, open-node-deployer will install a generic monitoring stack composed of prometheus, alertmanager, grafana and loki.
 
-There will be a grafana instance deployed per cluster, and they will be accessible
-at `https://grafana.<deployment_name>-<n>.<domain>`, being `n` the order of the
-cluster in the config starting with 0, and can be accessed with username `admin`
-and password controlled by the envirnment variable `GRAFANA_PASSWORD` (`grafanapassword`
-if not set).
-
-All the nodes in the deployment will be sending operational data to a substrate-telemetry
-backend deployed on the first cluster (according to the config definition order).
-Connected to that backend is also a frontend accessible at `https://telemetry.<deployment_name>-0.<domain>`.
-
-A prometheus exporter is also deployed as part of the substrate-telemetry pod,
-there is a grafana dashboard called `Polkadot Metrics` showing information from
-the exposed metrics. -->
+There will be a grafana instance deployed per cluster, and can be accessed locally by using `kubectl port-forward svc/grafana -n monitoring :80` with default username `admin` and password `admin123`.
 
 ## FAQ
 
