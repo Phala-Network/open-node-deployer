@@ -162,19 +162,23 @@
         "nodes": {
           "full": {
             "enabled": true,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           },
           "rpc": {
             "enabled": true,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           },
           "bootstrap": {
             "enabled": false,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           },
           "collator": {
             "enabled": false,
-            "replica": 1
+            "replica": 1,
+            "partition": 0
           }
         }
       }
