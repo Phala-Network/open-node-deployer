@@ -1,0 +1,127 @@
+nameOverride: "prometheus-operator"
+fullnameOverride: "prometheus-operator"
+
+defaultRules:
+  create: true
+  rules:
+    alertmanager: true
+    etcd: true
+    general: true
+    k8s: true
+    kubeApiserver: true
+    kubeApiserverAvailability: true
+    kubeApiserverError: true
+    kubeApiserverSlos: true
+    kubelet: true
+    kubePrometheusGeneral: true
+    kubePrometheusNodeAlerting: true
+    kubePrometheusNodeRecording: true
+    kubernetesAbsent: true
+    kubernetesApps: true
+    kubernetesResources: false
+    kubernetesStorage: true
+    kubernetesSystem: true
+    kubeScheduler: false
+    kubeStateMetrics: true
+    network: true
+    node: true
+    prometheus: true
+    prometheusOperator: true
+    time: true
+
+kubeControllerManager:
+  enabled: false
+
+kubeDns:
+  enabled: false
+
+coreDns:
+  enabled: false
+
+kubeApiServer:
+  enabled: false
+
+grafana:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+
+prometheus:
+  prometheusSpec:
+    ruleSelector:
+      matchExpressions:
+      - key: app
+        operator: In
+        values:
+        - open-node
+        - prometheus-operator
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 750m
+        memory: 3Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 30Gi
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+  alertmanagerSpec:
+    resources:
+      limits:
+        cpu: 400m
+        memory: 400Mi
+      requests:
+        cpu: 300m
+        memory: 400Mi
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+
+prometheusOperator:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+kubeStateMetrics:
+  resources:
+    limits:
+      cpu: 25m
+      memory: 50Mi
+    requests:
+      cpu: 25m
+      memory: 50Mi
+
+prometheus-node-exporter:
+  service:
+    port: 31000
+    targetPort: 31000
+  prometheus:
+    monitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus-operator
+  resources:
+    limits:
+      cpu: 200m
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi

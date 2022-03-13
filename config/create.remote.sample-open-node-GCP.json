@@ -4,7 +4,7 @@
   "keep": true,
   "nodes": {
     "common": {
-      "image": "phalanetwork/khala-node:v1119-healthcheck",
+      "image": "phalanetwork/khala-node:v1110-healthcheck",
       "command": [],
       "dataPath": "/data",
       "dataVolume": {
@@ -40,13 +40,15 @@
           "--pruning=archive",
           "--state-cache-size=671088640",
           "--db-cache=2048",
-          "--max-runtime-instances=16"
+          "--max-runtime-instances=16",
+          "--prometheus-external"
         ],
         "relay": [
           "--pruning=256",
           "--state-cache-size=671088640",
           "--db-cache=2048",
-          "--max-runtime-instances=16"
+          "--max-runtime-instances=16",
+          "--prometheus-external"
         ]
       },
       "resources": {
@@ -73,13 +75,15 @@
           "--unsafe-ws-external",
           "--ws-port=9944",
           "--unsafe-rpc-external",
-          "--rpc-port=9933"
+          "--rpc-port=9933",
+          "--prometheus-external"
         ],
         "relay": [
           "--pruning=256",
           "--state-cache-size=671088640",
           "--db-cache=2048",
-          "--max-runtime-instances=16"
+          "--max-runtime-instances=16",
+          "--prometheus-external"
         ]
       },
       "resources": {
@@ -144,10 +148,7 @@
     }
   },
   "monitoring": {
-    "enabled": true,
-    "opsgenie": {
-      "enabled": false
-     }
+    "enabled": true
   },
   "remote": {
     "projectID": "open-node-dev",

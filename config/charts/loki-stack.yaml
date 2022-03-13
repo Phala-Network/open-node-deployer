@@ -1,11 +1,16 @@
+loki:
+  enabled: true
+  # TODO: persistent volumes
+
 promtail:
+  enabled: true
   serviceMonitor:
     enabled: true
     additionalLabels:
       release: prometheus-operator
   pipelineStages:
   - match:
-      selector: '{app=~"polkadot-node"}'
+      selector: '{app=~"open-node"}'
       stages:
       - regex:
           expression: ".*(?P<scheduled_epoch>Next epoch starts at slot)"
@@ -17,7 +22,7 @@ promtail:
             config:
               action: inc
   - match:
-      selector: '{app=~"polkadot-node"}'
+      selector: '{app=~"open-node"}'
       stages:
       - regex:
           expression: ".*(?P<started_epoch>New epoch .* launching at block)"
